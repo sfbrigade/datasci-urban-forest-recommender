@@ -1,6 +1,6 @@
 """Stupid simple recomendation engine"""
 from flask import Flask, render_template, send_from_directory, request, jsonify
-
+import model
 APP = Flask(__name__, template_folder='assets/templates/')
 
 @APP.route('/')
@@ -11,7 +11,7 @@ def homepage():
 @APP.route('/recommend/<int:latitude>/<int:longitude>')
 def recomendation(latitude, longitude):
     """Calls recomendation engine. Expects latitude and longitude"""
-    result = 'Not implemented'
+    result = model.TreeRecommendation(lat,long)
     return jsonify(result)
 
 @APP.route('/assets/js/<path:path>')
