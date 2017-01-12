@@ -84,4 +84,15 @@ function if_gmap_loadpicker()
 function if_gmap_updateInfoWindow()
 {
 	infoWindow.setContent("Longitude: "+ gmapmarker.getPosition().lng().toFixed(6)+"<br>"+"Latitude: "+ gmapmarker.getPosition().lat().toFixed(6));
+
+	// Call the model api
+	// TODO consts
+	$.ajax({
+	  url:'http://localhost:5000/recommend/4/3',
+	  dataType:'json',
+	  type: 'get',
+	  success:function(response){
+			document.getElementById("tree-recommendation").innerHTML = response
+	  }
+  })
 } // end of if_gmap_bindInfoWindow
