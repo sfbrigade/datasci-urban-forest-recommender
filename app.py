@@ -1,18 +1,32 @@
 """Stupid simple recomendation engine"""
-from flask import Flask, render_template, send_from_directory, request, jsonify
-import model
+from flask import Flask, render_template, send_from_directory, jsonify, abort
+from model import TreeRecommendation
+
 APP = Flask(__name__, template_folder='assets/templates/')
+RECOMMENDER = TreeRecommendation()
 
 @APP.route('/')
 def homepage():
     """Home"""
     return render_template('index.html')
 
-@APP.route('/recommend/<int:latitude>/<int:longitude>')
+
+@APP.route('/data')
+def data():
+    """Print raw data as html"""
+    return RECOMMENDER.data_html()
+
+
+@APP.route('/recommend/<latitude>/<longitude>')
 def recomendation(latitude, longitude):
     """Calls recomendation engine. Expects latitude and longitude"""
-    result = model.TreeRecommendation(lat,long)
+    try:
+        latitude, longitude = float(latitude), float(longitude)
+    except ValueError:
+        abort(404)
+    result = RECOMMENDER.recommend(latitude, longitude)
     return jsonify(result)
+
 
 @APP.route('/assets/js/<path:path>')
 def send_js(path):

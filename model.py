@@ -1,50 +1,56 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import scipy as sp
 from sklearn.neighbors import NearestNeighbors
 
-def TreeRecommendation(lat, long):
+class TreeRecommendation():
+    def __init__(self):
+        df_invtry_new = pd.read_csv('assets/data/combined_tree_data_with_header_with_derived_neighborhood.csv')
 
-    df_invtry_new = pd.read_csv('../data/combined_tree_data_with_header_with_derived_neighborhood.csv')
+        # Drop ones without a condition score
+        df_tree_cond = df_invtry_new.dropna(subset=['condition']).copy()
 
-    # Drop ones without a condition score
-    df_tree_cond = df_invtry_new.dropna(subset=['condition']).copy()
+        # Convert case of all condition scores
+        df_tree_cond.condition = df_tree_cond.condition.apply(lambda cond: cond.strip().lower())
 
-    # Convert case of all condition scores
-    df_tree_cond.condition = df_tree_cond.condition.apply(lambda cond: cond.strip().lower())
+        # Combine similar condition scores and ignore all others
+        condition_map = {
+            'excellent': 'good',
+            'very good': 'good',
+            'very': 'good',
+            'good': 'good',
+            'fair': 'fair',
+            'poor': 'poor',
+            'critial': 'poor',
+        }
+        df_tree_cond.condition = df_tree_cond.condition.map(condition_map)
 
-    # Combine similar condition scores and ignore all others
-    condition_map = {
-        'excellent': 'good',
-        'very good': 'good',
-        'very': 'good',
-        'good': 'good',
-        'fair': 'fair',
-        'poor': 'poor',
-        'critial': 'poor',
-    }
-    df_tree_cond.condition = df_tree_cond.condition.map(condition_map)
+        # Drop the trees that were not mapped
+        df_tree_cond = df_tree_cond.dropna(subset=['condition'])
 
-    # Drop the trees that were not mapped
-    df_tree_cond = df_tree_cond.dropna(subset=['condition'])
+        # Convert to neg score for poor and positive for goodnp
+        df_tree_cond['condition_score'] = df_tree_cond.condition.map({'good': 1, 'fair': 0, 'poor': -1})
 
-    # Convert to neg score for poor and positive for good
-    df_tree_cond['condition_score'] = df_tree_cond.condition.map({'good': 1, 'fair': 0, 'poor': -1})
+        self.df_tree_cond = df_tree_cond
 
-    knn = NearestNeighbors(algorithm='ball_tree').fit(df_tree_cond[['latitude', 'longitude']])
+        # Create model and fit
+        self.knn = NearestNeighbors(algorithm='ball_tree').fit(df_tree_cond[['latitude', 'longitude']])
 
-    # Get condition scores across the city
-    dists, nearest_trees = knn.kneighbors(X=[lat,long], n_neighbors=25, return_distance=True)
+    def data_html(self):
+        return self.df_tree_cond.to_html()
 
-    # Keep recommendation spots that are close enough to existing trees
-    nearest_trees = nearest_trees[dists.mean(axis=1) < 0.005]
+    def recommend(self, latitude, longitude):
+        print(latitude, longitude)
 
-    species = []
+        # Get condition scores across the city
+        dists, nearest_trees = self.knn.kneighbors(X=[latitude, longitude], n_neighbors=25, return_distance=True)
 
-    for row in range(nearest_trees.shape[0]):
+        # Keep recommendation spots that are close enough to existing trees
+        mean_dist = dists[0].mean()
+        if mean_dist > 0.005:
+            return ['No-Result', 'Mean distance from nearest trees is {}.'.format(mean_dist)]
+
+        nearest_trees = nearest_trees[0]
         df_pick = pd.DataFrame()
-        local_trees = df_tree_cond.iloc[nearest_trees[row, :]]
+        local_trees = self.df_tree_cond.iloc[nearest_trees]
         df_pick['condition'] = local_trees.groupby(['scientific_species_name',
                                                     'common_species_name']).mean().condition_score
         df_pick['count'] = local_trees.groupby(['scientific_species_name',
@@ -52,4 +58,4 @@ def TreeRecommendation(lat, long):
 
         pick = df_pick.sort_values(['condition', 'count'], ascending=False)
 
-    return pick.reset_index()['common_species_name'].tolist()
+        return pick.reset_index()['common_species_name'].tolist()

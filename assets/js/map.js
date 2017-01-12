@@ -12,6 +12,7 @@ var infoWindow;
 var def_zoomval = 12;
 var def_longval = -122.445374;
 var def_latval = 37.757959;
+var api_url = '/recommend/'
 
 function if_gmap_init()
 {
@@ -83,16 +84,19 @@ function if_gmap_loadpicker()
 
 function if_gmap_updateInfoWindow()
 {
-	infoWindow.setContent("Longitude: "+ gmapmarker.getPosition().lng().toFixed(6)+"<br>"+"Latitude: "+ gmapmarker.getPosition().lat().toFixed(6));
+	var lng = gmapmarker.getPosition().lng().toFixed(6)
+	var lat = gmapmarker.getPosition().lat().toFixed(6)
+	infoWindow.setContent("Longitude: " + lng + "<br>" + "Latitude: " + lat);
 
 	// Call the model api
 	// TODO consts
 	$.ajax({
-	  url:'http://localhost:5000/recommend/4/3',
+	  url:api_url + lat + '/' + lng,
 	  dataType:'json',
 	  type: 'get',
 	  success:function(response){
-			document.getElementById("tree-recommendation").innerHTML = response
+			document.getElementById("tree-recommendation").innerHTML = response.join('<br>')
+			console.log(response)
 	  }
   })
 } // end of if_gmap_bindInfoWindow
