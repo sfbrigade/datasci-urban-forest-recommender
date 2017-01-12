@@ -14,57 +14,15 @@
     </style>
   </head>
   <body onload="if_gmap_init();">
-    <div class="container">
-      <p>My string: {{my_string}}</p>
-      <p>Value from the list: {{my_list[3]}}</p>
-      <p>Loop through the list:</p>
-      <ul>
-        {% for n in my_list %}
-        <li>{{n}}</li>
-        {% endfor %}
-      </ul>
+
+    <h1>FuF Tree Recommender</h1>
+    <p>Select a location on the map to get tree recommendations</p>
+    <div id="selector-map" style="width: 480px; height: 540px"></div>
+    <div>
+      <input type=text value="-122.445374" id="longval">
+      <input type=text value="37.757959" id="latval">
     </div>
-
-  <form>
-    <table border=0 cellspacing=0 cellpadding=2>
-      <tbody>
-                                 <tr>
-                                        <td colspan=2 align=center>
-                    <font size=5><b>Google Map Longitude Latitude Picker</b></font><br>
-                    <i>(using google maps api v3)</i><br>
-                                         </td>
-                                 </tr>
-        <tr>
-        <td valign=top width=200>
-          <i>Use this tool to identify longitude latitude information of a location in Google Maps.  Feel free to download the source code using the link below.</i>
-          <br><br>
-          <font size=1>(specify coordinates and click "Jump to Location")</font>
-          <table border=0 bgcolor=#A0FFA0 width=100%>
-            <tr>
-              <td valign=top>Longitude:</td>
-              <td><input size=10 type=text value="120.994260" id="longval"><br>(e.g. 120.994260)</td>
-            </tr>
-            <tr>
-              <td valign=top>Latitude:</td>
-              <td><input size=10 type=text value="14.593999" id="latval"><br>(e.g. 14.593999)</td>
-            </tr>
-            <tr>
-              <td colspan=2 align=center>
-                <input type=button value="Jump to location" onclick="if_gmap_loadpicker();">
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td id="maparea" style="background-color: #E0E0E0;">
-          <center>- click on the map below to change marker position</center>
-          <center>- click on the marker to view longitude/latitude information</center>
-          <div id="mapitems" style="width: 480px; height: 540px"></div>
-        </td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
-
+    <input type=button value="Jump to location" onclick="if_gmap_loadpicker();">
 
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>

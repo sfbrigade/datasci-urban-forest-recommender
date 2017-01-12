@@ -14,5 +14,6 @@ def homepage():
 def send_js(path):
     return send_from_directory('assets/js', path)
 
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

@@ -1,4 +1,4 @@
-/* Code based on Google Map APIv3 Tutorials 
+/* Code based on Google Map APIv3 Tutorials
 
 Taken from http://www.tytai.com/gmap/
 */
@@ -8,15 +8,16 @@ var gmapdata;
 var gmapmarker;
 var infoWindow;
 
-var def_zoomval = 10;
-var def_longval = 120.994260;
-var def_latval = 14.593999;
+// Defaults
+var def_zoomval = 12;
+var def_longval = -122.445374;
+var def_latval = 37.757959;
 
 function if_gmap_init()
 {
 	var curpoint = new google.maps.LatLng(def_latval,def_longval);
 
-	gmapdata = new google.maps.Map(document.getElementById("mapitems"), {
+	gmapdata = new google.maps.Map(document.getElementById("selector-map"), {
 		center: curpoint,
 		zoom: def_zoomval,
 		mapTypeId: 'roadmap'
@@ -84,4 +85,3 @@ function if_gmap_updateInfoWindow()
 {
 	infoWindow.setContent("Longitude: "+ gmapmarker.getPosition().lng().toFixed(6)+"<br>"+"Latitude: "+ gmapmarker.getPosition().lat().toFixed(6));
 } // end of if_gmap_bindInfoWindow
-
