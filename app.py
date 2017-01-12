@@ -1,19 +1,24 @@
-from flask import Flask, render_template, send_from_directory
-from datetime import datetime
+"""Stupid simple recomendation engine"""
+from flask import Flask, render_template, send_from_directory, request, jsonify
 
-app = Flask(__name__, template_folder='assets/templates/')
+APP = Flask(__name__, template_folder='assets/templates/')
 
-@app.route('/')
+@APP.route('/')
 def homepage():
-    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+    """Home"""
+    return render_template('index.html')
 
-    return render_template('index.html', my_string="Wheeeee!", my_list=[0,1,2,3,4,5])
+@APP.route('/recommend/<int:latitude>/<int:longitude>')
+def recomendation(latitude, longitude):
+    """Calls recomendation engine. Expects latitude and longitude"""
+    result = 'Not implemented'
+    return jsonify(result)
 
-
-@app.route('/assets/js/<path:path>')
+@APP.route('/assets/js/<path:path>')
 def send_js(path):
+    """Assets including javascript"""
     return send_from_directory('assets/js', path)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+    APP.run(debug=True, use_reloader=True)
