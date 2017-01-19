@@ -41,7 +41,9 @@ class TreeRecommendation():
         print(latitude, longitude)
 
         # Get condition scores across the city
-        dists, nearest_trees = self.knn.kneighbors(X=[latitude, longitude], n_neighbors=25, return_distance=True)
+        dists, nearest_trees = self.knn.kneighbors(X=[[latitude, longitude]],
+                                                   n_neighbors=25,
+                                                   return_distance=True)
 
         # Keep recommendation spots that are close enough to existing trees
         mean_dist = dists[0].mean()

@@ -16,15 +16,20 @@
 
     <h1>FuF Tree Recommender</h1>
     <p>Select a location on the map to get tree recommendations</p>
-    <div id="selector-map" style="width: 480px; height: 540px"></div>
-    <div>
-      <input type=text value="-122.445374" id="longval">
-      <input type=text value="37.757959" id="latval">
+    <div style="width: 100%">
+      <div style="float: left;">
+        <div id="selector-map" style="width: 480px; height: 540px"></div>
+      </div>
+      <div style="padding-left: 1em; float: left;">
+        <div>
+          <input type=text value="-122.445374" id="longval">
+          <input type=text value="37.757959" id="latval">
+        </div>
+        <input type=button value="Jump to location" onclick="if_gmap_loadpicker();">
+
+        <div id="tree-recommendation"></div>
+      </div>
     </div>
-    <input type=button value="Jump to location" onclick="if_gmap_loadpicker();">
-
-    <div id="tree-recommendation"></div>
-
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   </body>
 </html>
