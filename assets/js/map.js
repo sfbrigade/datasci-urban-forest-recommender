@@ -3,7 +3,6 @@
 Taken from http://www.tytai.com/gmap/
 */
 
-
 var gmapdata;
 var gmapmarker;
 var infoWindow;
@@ -44,6 +43,9 @@ function if_gmap_init()
 
 	document.getElementById("longval").value = def_longval;
 	document.getElementById("latval").value = def_latval;
+
+	// Update map for initial run
+	if_gmap_updateInfoWindow();
 
 	return false;
 } // end of if_gmap_init

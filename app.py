@@ -1,4 +1,5 @@
 """Stupid simple recomendation engine"""
+import os
 from flask import Flask, render_template, send_from_directory, jsonify, abort
 from model import TreeRecommendation
 
@@ -8,7 +9,7 @@ RECOMMENDER = TreeRecommendation()
 @APP.route('/')
 def homepage():
     """Home"""
-    return render_template('index.html')
+    return render_template('index.html', key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 
 
 @APP.route('/data')

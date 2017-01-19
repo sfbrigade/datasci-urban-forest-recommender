@@ -4,7 +4,7 @@
     <title>Flask Template Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="assets/js/map.js"></script>
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js {%- if key -%} ?key={{ key }} {%- endif -%}"></script>
     <style type="text/css">
       .container {
         max-width: 500px;
