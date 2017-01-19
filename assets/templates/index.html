@@ -15,12 +15,13 @@
   <body onload="if_gmap_init();">
 
     <h1>FuF Tree Recommender</h1>
-    <p>Select a location on the map to get tree recommendations</p>
-    <div style="width: 100%">
+    <p>Select a location on the map to get tree recommendations.</p>
+
+    <div style="width: 100%; overflow: auto">
       <div style="float: left;">
         <div id="selector-map" style="width: 480px; height: 540px"></div>
       </div>
-      <div style="padding-left: 1em; float: left;">
+      <div style="padding-left: 1em;">
         <div>
           <input type=text value="-122.445374" id="longval">
           <input type=text value="37.757959" id="latval">
@@ -30,6 +31,11 @@
         <div id="tree-recommendation"></div>
       </div>
     </div>
+
+    <p>A project of the San Francisco Code for America Chapter.
+      <a href="https://github.com/sfbrigade/datasci-urban-forest-recommender">Github</a>
+    </p>
+
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   </body>
 </html>
