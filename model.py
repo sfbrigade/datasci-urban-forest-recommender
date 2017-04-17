@@ -62,7 +62,7 @@ class TreeRecommendation():
                             ascending = False).reset_index()
 
         pick['botanical'] = pick['botanical'].apply(lambda x: x.lower())
-        accepted_species = df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
+        accepted_species = self.df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
 
         joined = pd.merge(pick, accepted_species,
                           left_on = 'botanical', right_on = 'species', how = 'inner')
