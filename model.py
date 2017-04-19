@@ -30,6 +30,7 @@ class TreeRecommendation():
         df_tree_cond['condition_score'] = df_tree_cond.condition.map({'good': 1, 'fair': 0, 'poor': -1})
 
         self.df_tree_cond = df_tree_cond
+        self.df_rules = df_rules
 
         # Create model and fit
         self.knn = NearestNeighbors(algorithm = 'ball_tree').fit(df_tree_cond[['latitude', 'longitude']])
