@@ -4,7 +4,6 @@ from sklearn.neighbors import NearestNeighbors
 class TreeRecommendation():
     def __init__(self):
         df_invtry_new = pd.read_csv('assets/data/combined_tree_data_with_header_with_derived_neighborhood.csv')
-        df_rules = pd.read_excel('assets/data/sf_tree_rules.xlsx', sheetname = 0)
         # Drop ones without a condition score
         df_tree_cond = df_invtry_new.dropna(subset = ['condition']).copy()
 
@@ -30,7 +29,6 @@ class TreeRecommendation():
         df_tree_cond['condition_score'] = df_tree_cond.condition.map({'good': 1, 'fair': 0, 'poor': -1})
 
         self.df_tree_cond = df_tree_cond
-        self.df_rules = df_rules
 
         # Create model and fit
         self.knn = NearestNeighbors(algorithm = 'ball_tree').fit(df_tree_cond[['latitude', 'longitude']])
@@ -41,8 +39,10 @@ class TreeRecommendation():
     def recommend(self, latitude, longitude):
         print(latitude, longitude)
 
+        df_rules = pd.read_excel('assets/data/sf_tree_rules.xlsx', sheetname = 0)
+
         # Get condition scores across the city
-        dists, nearest_trees = self.knn.kneighbors(X=[[latitude, longitude]],
+        dists, nearest_trees = self.knn.kneighbors(X = [[latitude, longitude]],
                                                    n_neighbors = 25,
                                                    return_distance = True)
 
@@ -63,7 +63,7 @@ class TreeRecommendation():
                             ascending = False).reset_index()
 
         pick['botanical'] = pick['botanical'].apply(lambda x: x.lower())
-        accepted_species = self.df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
+        accepted_species = df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
 
         joined = pd.merge(pick, accepted_species,
                           left_on = 'botanical', right_on = 'species', how = 'inner')
