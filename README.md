@@ -21,5 +21,5 @@ What remains to be done:
 - Push to `deployment` branch to deploy:
   1. `git checkout deployment`
   1. `git rebase master`
-  1. `git push -f`
+  1. `git push`
 
