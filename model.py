@@ -3,7 +3,7 @@ from sklearn.neighbors import NearestNeighbors
 
 class TreeRecommendation():
     def __init__(self):
-        df_invtry_new = pd.read_csv('assets/data/combined_tree_data_with_header_with_derived_neighborhood.csv')
+        df_invtry_new = pd.read_csv('assets/data/trees.csv')
         # Drop ones without a condition score
         df_tree_cond = df_invtry_new.dropna(subset = ['condition']).copy()
 
@@ -33,13 +33,15 @@ class TreeRecommendation():
         # Create model and fit
         self.knn = NearestNeighbors(algorithm = 'ball_tree').fit(df_tree_cond[['latitude', 'longitude']])
 
+        # Load the rules dataset
+        self.df_rules = pd.read_excel('assets/data/sf_tree_rules.xlsx', sheetname = 0)
+
     def data_html(self):
         return self.df_tree_cond.to_html()
 
     def recommend(self, latitude, longitude):
-        print(latitude, longitude)
+        print('Recommending for', latitude, 'lat', longitude, 'long')
 
-        df_rules = pd.read_excel('assets/data/sf_tree_rules.xlsx', sheetname = 0)
 
         # Get condition scores across the city
         dists, nearest_trees = self.knn.kneighbors(X = [[latitude, longitude]],
@@ -54,18 +56,17 @@ class TreeRecommendation():
         nearest_trees = nearest_trees[0]
         df_pick = pd.DataFrame()
         local_trees = self.df_tree_cond.iloc[nearest_trees]
-        df_pick['condition'] = local_trees.groupby(['botanical',
-                                                    'common']).mean().condition_score
-        df_pick['count'] = local_trees.groupby(['botanical',
-                                                    'common']).count().condition_score
+        df_pick['condition'] = local_trees.groupby(['botanical', 'common']).mean().condition_score
+        df_pick['count'] = local_trees.groupby(['botanical', 'common']).count().condition_score
 
         pick = df_pick.sort(['condition', 'count'],
                             ascending = False).reset_index()
 
         pick['botanical'] = pick['botanical'].apply(lambda x: x.lower())
-        accepted_species = df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
+        accepted_species = self.df_rules['species'].apply(lambda x: x.lower()).reset_index(0)
 
         joined = pd.merge(pick, accepted_species,
                           left_on = 'botanical', right_on = 'species', how = 'inner')
 
         return joined['common'].apply(lambda x: x.lower()).tolist()
+
